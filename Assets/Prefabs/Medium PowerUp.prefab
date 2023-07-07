@@ -111,5 +111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9edb701aa470ecf48958d7da17b7aa6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  point: 250
+  scorePoint: 250
+  forcePoint: 25
   scaleMultiplier: 1.2

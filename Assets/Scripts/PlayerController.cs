@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform weakPivotTransform;
     [SerializeField] TargetFollow cameraTargetFollow;
     [SerializeField] float movementSpeed;
+    [SerializeField] float forceFactor;
     [SerializeField] float weakPivotRotationSpeed;
     
     public int Score { get; private set; } = 0;
@@ -47,14 +49,25 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            Rigidbody enemyRb = other.gameObject.GetComponent<Rigidbody>();
+            Vector3 forceDir = other.transform.position - transform.position;
+            enemyRb.AddForce(forceDir * forceFactor, ForceMode.Impulse);
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("PowerUp"))
         {
             PowerUp powerUpRef = other.GetComponent<PowerUp>();
             UpdateCameraOffset(powerUpRef.scaleMultiplier);
+            UpdateForceFactor(powerUpRef.forcePoint);
             UpdatePlayerScale(powerUpRef.scaleMultiplier);
-            UpdatePlayerScore(powerUpRef.point);
+            UpdatePlayerScore(powerUpRef.scorePoint);
             Destroy(other.gameObject);
         }
     }
@@ -82,5 +95,10 @@ public class PlayerController : MonoBehaviour
     private void UpdatePlayerScore(int point)
     {
         Score += point;
+    }
+
+    private void UpdateForceFactor(int forcePoint)
+    {
+        forceFactor += forcePoint;
     }
 }

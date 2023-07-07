@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Weak Point
   - PowerUp
+  - Enemy
   layers:
   - Default
   - TransparentFX

@@ -6,19 +6,18 @@ public class TargetFollow : MonoBehaviour
 {
     [SerializeField] Transform target;
     [SerializeField] Vector3 offsetVector;
-    
-    void LateUpdate()
+    [SerializeField] float smoothSpeed;
+    void FixedUpdate()
     {
         if (target)
         {
             Vector3 targetPosition = target.position;
             if (offsetVector != Vector3.zero)
             {
-                targetPosition.x += offsetVector.x;
-                targetPosition.y += offsetVector.y;
-                targetPosition.z += offsetVector.z;
+                targetPosition += offsetVector;
             }
-            transform.position = targetPosition;
+            Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPosition, smoothSpeed);
+            transform.position = smoothedPosition;
         }
     }
     
