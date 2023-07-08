@@ -3,10 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Wrestler
 {
-    public int Score { get; private set; } = 0;
-    public int forceFactor;
+    private Transform _targetTransform;
+    
+    protected override void InitValues()
+    {
+        this.MovementSpeed = initMovementSpeed;
+        this.ForceFactor = initForceFactor;
+        this.WeakPivotRotationSpeed = initWeakPivotRotationSpeed;
+        this.Score = 0;
+    }
+    
+    private void Awake()
+    {
+        InitValues();
+    }
     
     // Start is called before the first frame update
     void Start()
@@ -22,11 +34,34 @@ public class Enemy : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Enemy"))
         {
             Rigidbody playerRb = other.gameObject.GetComponent<Rigidbody>();
-            Vector3 forceDir = other.transform.position - transform.position;
-            playerRb.AddForce(forceDir * forceFactor, ForceMode.Impulse);
+            base.PushAttack(playerRb);
         }
+    }
+
+    private void Roaming()
+    {
+        
+    }
+
+    private Transform GetClosestWrestler(Transform[] wrestlers)
+    {
+        Transform closestTarget = null;
+        float closestDistanceSqr = Mathf.Infinity;
+        Vector3 currentPosition = transform.position;
+        foreach (Transform wrestlerTransform in wrestlers)
+        {
+            Vector3 distanceToTarget = wrestlerTransform.position - currentPosition;
+            float distanceSqr = distanceToTarget.sqrMagnitude;
+            if (closestDistanceSqr > distanceSqr)
+            {
+                closestDistanceSqr = distanceSqr;
+                closestTarget = wrestlerTransform;
+            }
+        }
+        
+        return closestTarget;
     }
 }

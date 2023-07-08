@@ -4,18 +4,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Wrestler
 {
     private Rigidbody _playerRigidbody;
     private Vector2 _movementDir;
+    [Space(20)]
     [SerializeField] Transform weakPivotTransform;
     [SerializeField] TargetFollow cameraTargetFollow;
-    [SerializeField] float movementSpeed;
-    [SerializeField] float forceFactor;
-    [SerializeField] float weakPivotRotationSpeed;
-    
-    public int Score { get; private set; } = 0;
-    
+
+    protected override void InitValues()
+    {
+        this.MovementSpeed = initMovementSpeed;
+        this.ForceFactor = initForceFactor;
+        this.WeakPivotRotationSpeed = initWeakPivotRotationSpeed;
+        this.Score = 0;
+    }
+
+    private void Awake()
+    {
+        InitValues();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,7 +54,7 @@ public class PlayerController : MonoBehaviour
         if (_playerRigidbody.velocity.y == 0)
         {
             _playerRigidbody.velocity =
-                new Vector3(_movementDir.x, _playerRigidbody.velocity.y, _movementDir.y) * movementSpeed;
+                new Vector3(_movementDir.x, _playerRigidbody.velocity.y, _movementDir.y) * MovementSpeed;
         }
     }
 
@@ -54,14 +63,13 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             Rigidbody enemyRb = other.gameObject.GetComponent<Rigidbody>();
-            Vector3 forceDir = other.transform.position - transform.position;
-            enemyRb.AddForce(forceDir * forceFactor, ForceMode.Impulse);
+            base.PushAttack(enemyRb);
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("PowerUp"))
+        if (other.CompareTag("PowerUp"))
         {
             PowerUp powerUpRef = other.GetComponent<PowerUp>();
             UpdateCameraOffset(powerUpRef.scaleMultiplier);
@@ -79,7 +87,7 @@ public class PlayerController : MonoBehaviour
         float angle = Mathf.Atan2(_movementDir.x, _movementDir.y) * Mathf.Rad2Deg;
         var rotation = weakPivotTransform.rotation;
         rotation = Quaternion.Slerp(rotation, Quaternion.Euler(0f, angle, 0f),
-            weakPivotRotationSpeed * Time.deltaTime);
+            WeakPivotRotationSpeed * Time.deltaTime);
         weakPivotTransform.rotation = rotation;
     }
 
@@ -99,6 +107,6 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateForceFactor(int forcePoint)
     {
-        forceFactor += forcePoint;
+        ForceFactor += forcePoint;
     }
 }
