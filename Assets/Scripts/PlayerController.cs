@@ -11,7 +11,8 @@ public class PlayerController : Wrestler
     [Space(20)]
     [SerializeField] Transform weakPivotTransform;
     [SerializeField] TargetFollow cameraTargetFollow;
-
+    public bool IsWin { get; private set; }
+    
     protected override void InitValues()
     {
         this.MovementSpeed = initMovementSpeed;
@@ -48,7 +49,8 @@ public class PlayerController : Wrestler
         }
         if (transform.position.y < -2f)
         {
-            Debug.Log("Game Over!");
+            IsWin = false;
+            GameManager.Instance.FinishGame();
         }
     }
 
