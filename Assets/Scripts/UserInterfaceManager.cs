@@ -11,6 +11,7 @@ public class UserInterfaceManager : MonoBehaviour
     public RectTransform headerMenu;
     public RectTransform pauseMenu;
     public RectTransform endMenu;
+    public RectTransform fixedJoystick;
     [Header("End Menu Text Fields")] 
     public Text gameOverText;
     public Text endScoreText;
@@ -48,12 +49,14 @@ public class UserInterfaceManager : MonoBehaviour
     public void OnPause()
     {
         headerMenu.gameObject.SetActive(false);
+        fixedJoystick.gameObject.SetActive(false);
         pauseMenu.gameObject.SetActive(true);
     }
 
     public void OnResume()
     {
         pauseMenu.gameObject.SetActive(false);
+        fixedJoystick.gameObject.SetActive(true);
         headerMenu.gameObject.SetActive(true);
     }
 
@@ -83,6 +86,7 @@ public class UserInterfaceManager : MonoBehaviour
         }
         // Show Scoreboard and End Menu
         headerMenu.gameObject.SetActive(false);
+        fixedJoystick.gameObject.SetActive(false);
         endMenu.gameObject.SetActive(true);
     }
 }

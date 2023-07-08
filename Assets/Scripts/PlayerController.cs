@@ -11,6 +11,7 @@ public class PlayerController : Wrestler
     [Space(20)]
     [SerializeField] Transform weakPivotTransform;
     [SerializeField] TargetFollow cameraTargetFollow;
+    [SerializeField] FixedJoystick fixedJoystick;
     public bool IsWin { get; private set; }
     
     protected override void InitValues()
@@ -35,12 +36,12 @@ public class PlayerController : Wrestler
     // Update is called once per frame
     void Update()
     {
-        float verticalInput = Input.GetAxis("Vertical");
-        float horizontalInput = Input.GetAxis("Horizontal");
+        //float verticalInput = Input.GetAxis("Vertical");
+        //float horizontalInput = Input.GetAxis("Horizontal");
         
         if (!IsBeingPushed)
         {
-            _movementDir = new Vector2(horizontalInput, verticalInput);
+            _movementDir = new Vector2(fixedJoystick.Horizontal, fixedJoystick.Vertical);
         }
         // If player doesn't move then don't rotate the object to start point.
         if (_movementDir != Vector2.zero) 
