@@ -36,8 +36,11 @@ public class PlayerController : Wrestler
     {
         float verticalInput = Input.GetAxis("Vertical");
         float horizontalInput = Input.GetAxis("Horizontal");
-        _movementDir = new Vector2(horizontalInput, verticalInput);
         
+        if (!IsBeingPushed)
+        {
+            _movementDir = new Vector2(horizontalInput, verticalInput);
+        }
         // If player doesn't move then don't rotate the object to start point.
         if (_movementDir != Vector2.zero) 
         {
@@ -51,10 +54,10 @@ public class PlayerController : Wrestler
 
     private void FixedUpdate()
     {
-        if (_playerRigidbody.velocity.y == 0)
+        if (_movementDir != Vector2.zero && !IsBeingPushed)
         {
             _playerRigidbody.velocity =
-                new Vector3(_movementDir.x, _playerRigidbody.velocity.y, _movementDir.y) * MovementSpeed;
+                new Vector3(_movementDir.x, -0.5f, _movementDir.y) * MovementSpeed;
         }
     }
 
@@ -62,8 +65,11 @@ public class PlayerController : Wrestler
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            Rigidbody enemyRb = other.gameObject.GetComponent<Rigidbody>();
-            base.PushAttack(enemyRb);
+            Wrestler wrestler = other.gameObject.GetComponent<Wrestler>();
+            if (ForceFactor > wrestler.ForceFactor)
+            {
+                base.PushAttack(wrestler);
+            }
         }
     }
 

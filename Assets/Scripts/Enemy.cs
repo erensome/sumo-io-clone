@@ -36,8 +36,11 @@ public class Enemy : Wrestler
     {
         if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Enemy"))
         {
-            Rigidbody playerRb = other.gameObject.GetComponent<Rigidbody>();
-            base.PushAttack(playerRb);
+            Wrestler wrestler = other.gameObject.GetComponent<Wrestler>();
+            if (ForceFactor > wrestler.ForceFactor)
+            {
+                base.PushAttack(wrestler);
+            }
         }
     }
 
