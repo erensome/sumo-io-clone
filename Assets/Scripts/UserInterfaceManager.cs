@@ -13,7 +13,6 @@ public class UserInterfaceManager : MonoBehaviour
     public RectTransform endMenu;
     [Header("End Menu Text Fields")] 
     public Text gameOverText;
-    public Text rankText;
     public Text endScoreText;
     [Space(20)]
     public Image timerFill;
@@ -61,14 +60,12 @@ public class UserInterfaceManager : MonoBehaviour
     private void PlayerWin()
     {
         gameOverText.text = "You Win!";
-        rankText.text = "You're #0";
         endScoreText.text = $"Score: {GameManager.Instance.playerController.Score.ToString()}";
     }
     
     private void PlayerLose()
     {
         gameOverText.text = "You Lose!";
-        rankText.text = "You're #0";
         endScoreText.text = $"Score: {GameManager.Instance.playerController.Score.ToString()}";
     }
     
