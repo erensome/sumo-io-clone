@@ -27,17 +27,7 @@ public class PlayerController : Wrestler
         UpdateCameraOffset(powerUp.scaleMultiplier);
         SpawnManager.Instance.DecreaseAndCheckPowerUps();
     }
-    // Rotates the Weak Point Pivot object in the Y-axis according to the player's movement direction.
-    // Thus, Weak Point object will always stay at back of the player.
-    protected override void RotateWeakPivot()
-    {
-        float angle = Mathf.Atan2(_movementDir.x, _movementDir.y) * Mathf.Rad2Deg;
-        var rotation = weakPivotTransform.rotation;
-        rotation = Quaternion.Slerp(rotation, Quaternion.Euler(0f, angle, 0f),
-            WeakPivotRotationSpeed * Time.deltaTime);
-        weakPivotTransform.rotation = rotation;
-    }
-    
+
     #endregion
     
     private void Awake()
@@ -64,7 +54,7 @@ public class PlayerController : Wrestler
         // If player doesn't move then don't rotate the object to start point.
         if (_movementDir != Vector2.zero) 
         {
-            RotateWeakPivot();
+            RotateWeakPivot(_movementDir);
         }
     }
 
@@ -85,6 +75,18 @@ public class PlayerController : Wrestler
             if (ForceFactor > wrestler.ForceFactor)
             {
                 base.PushAttack(wrestler);
+            }
+        }
+    }
+
+    private void OnCollisionStay(Collision other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            Wrestler wrestler = other.gameObject.GetComponent<Wrestler>();
+            if (wrestler.ForceFactor > ForceFactor)
+            {
+                wrestler.PushAttack(this);
             }
         }
     }

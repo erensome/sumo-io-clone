@@ -24,7 +24,6 @@ public abstract class Wrestler : MonoBehaviour
 
     #region Abstract Methods
     protected abstract void CollectPowerUp(PowerUp powerUp);
-    protected abstract void RotateWeakPivot();
     
     #endregion
     
@@ -37,14 +36,23 @@ public abstract class Wrestler : MonoBehaviour
         Score = 0;
         onDie = new UnityEvent();
     }
-    protected virtual void PushAttack(Wrestler wrestler)
+    public virtual void PushAttack(Wrestler wrestler)
     {
         Rigidbody enemyRigidbody = wrestler.GetComponent<Rigidbody>();
         Vector3 forceDir = enemyRigidbody.transform.position - transform.position;
         enemyRigidbody.AddForce(forceDir.normalized * ForceFactor, ForceMode.Impulse);
         wrestler.StartPushedCor();
     }
-    
+    // Rotates the Weak Point Pivot object in the Y-axis according to the player's movement direction.
+    // Thus, Weak Point object will always stay at back of the player.
+    protected virtual void RotateWeakPivot(Vector3 movementDir)
+    {
+        float angle = Mathf.Atan2(movementDir.x, movementDir.y) * Mathf.Rad2Deg;
+        var rotation = weakPivotTransform.rotation;
+        rotation = Quaternion.Slerp(rotation, Quaternion.Euler(0f, angle, 0f),
+            WeakPivotRotationSpeed * Time.deltaTime);
+        weakPivotTransform.rotation = rotation;
+    }
     protected virtual void UpdateForceFactor(float forcePoint)
     {
         ForceFactor += forcePoint;

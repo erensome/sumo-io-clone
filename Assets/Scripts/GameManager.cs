@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
@@ -29,7 +30,7 @@ public class GameManager : MonoBehaviour
     {
         // Prevents timescale delay after the restart game.
         Time.timeScale = 1f;
-        allWrestlers.Add(playerController);
+        StartCoroutine(StartGameInSeconds(3));
     }
 
     // Update is called once per frame
@@ -38,6 +39,21 @@ public class GameManager : MonoBehaviour
         
     }
 
+    public IEnumerator StartGameInSeconds(int second)
+    {
+        while (second >= 0)
+        {
+            UserInterfaceManager.Instance.countDownText.text = second.ToString();
+            second--;
+            yield return new WaitForSeconds(1f);
+        }
+        UserInterfaceManager.Instance.countDownText.enabled = false;
+        foreach (var wrestler in allWrestlers)
+        {
+            wrestler.enabled = true;
+        }
+    }
+    
     public void PauseGame()
     {
         if (Time.timeScale > 0f)

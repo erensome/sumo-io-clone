@@ -14,11 +14,11 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] GameObject powerUpPrefab;
     [SerializeField] GameObject enemyPrefab;
     [SerializeField] float radius;
+    [SerializeField] float powerUpSpawnDelay;
     [SerializeField] int powerUpCount;
     [SerializeField] int enemyCount;
     
-    // bu değişkeni private yap sonradan
-    public int _currentPrefabCount;
+    private int _currentPrefabCount;
     
     private void Awake()
     {
@@ -38,8 +38,9 @@ public class SpawnManager : MonoBehaviour
     {
         _currentPrefabCount = powerUpCount;
         SpawnEnemies(enemyCount);
+        GameManager.Instance.allWrestlers.Add(GameManager.Instance.playerController);
         SetStartPositionWrestlers(GameManager.Instance.allWrestlers);
-        Invoke(nameof(SpawnPowerUpsInCircleShape),2f);
+        Invoke(nameof(SpawnPowerUpsInCircleShape),3f + powerUpSpawnDelay);
     }
 
     // Update is called once per frame
@@ -58,7 +59,7 @@ public class SpawnManager : MonoBehaviour
             radius = Random.Range(7f, 15f);
             powerUpCount = Random.Range(3, 10);
             _currentPrefabCount = powerUpCount;
-            SpawnPowerUpsInCircleShape();
+            Invoke(nameof(SpawnPowerUpsInCircleShape), powerUpSpawnDelay);
         }
     }
     
@@ -88,8 +89,11 @@ public class SpawnManager : MonoBehaviour
         int angle = 360 / wrestlers.Count;
         for (int i = 0; i < wrestlers.Count; i++)
         {
+            // Wrestlers will be positioned in the circular form
             Vector3 randomPos = new Vector3((radius * Mathf.Cos(Mathf.Deg2Rad * (angle * i))), 0.5f, (radius * Mathf.Sin(Mathf.Deg2Rad * (angle * i))));
             wrestlers[i].transform.position = randomPos;
+            // Wrestlers will look origin point in the beginning of the game
+            wrestlers[i].transform.rotation = Quaternion.LookRotation(-randomPos, Vector3.up);
         }
     }
 }

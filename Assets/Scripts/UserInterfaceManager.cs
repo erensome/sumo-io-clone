@@ -20,6 +20,7 @@ public class UserInterfaceManager : MonoBehaviour
     [Header("Texts")]
     public Text remainingTimeText;
     public Text playerScoreText;
+    public Text countDownText;
     
     private void Awake()
     {

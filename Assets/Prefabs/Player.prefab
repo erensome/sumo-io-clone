@@ -252,7 +252,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6826857225610197351}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec35cde67926ee244bbbb2247df52eb9, type: 3}
   m_Name: 
@@ -263,3 +263,4 @@ MonoBehaviour:
   pushedTime: 1
   weakPivotTransform: {fileID: 6826857224053994334}
   cameraTargetFollow: {fileID: 0}
+  fixedJoystick: {fileID: 0}

@@ -8,7 +8,7 @@ public class Enemy : Wrestler
 {
     private Transform _targetTransform;
     private Vector3 _targetPos;
-    public float RoamingSpeed;
+    private Vector3 _movementDir;
     
     #region Wrestler Overrides
     protected override void InitValues()
@@ -24,17 +24,6 @@ public class Enemy : Wrestler
         base.UpdateForceFactor(powerUp.forcePoint);
         base.UpdateWrestlerScale(powerUp.scaleMultiplier);
         SpawnManager.Instance.DecreaseAndCheckPowerUps();
-    }
-    // Rotates the Weak Point Pivot object in the Y-axis according to the player's movement direction.
-    // Thus, Weak Point object will always stay at back of the player.
-    protected override void RotateWeakPivot()
-    {
-        Vector3 dir = _targetPos - transform.position;
-        float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
-        var rotation = weakPivotTransform.rotation;
-        rotation = Quaternion.Slerp(rotation, Quaternion.Euler(0f, angle, 0f),
-            WeakPivotRotationSpeed * Time.deltaTime);
-        weakPivotTransform.rotation = rotation;
     }
     
     #endregion
@@ -54,13 +43,13 @@ public class Enemy : Wrestler
     // Update is called once per frame
     void Update()
     {
-        RotateWeakPivot();
+        _movementDir = _targetPos - transform.position;
+        RotateWeakPivot(_movementDir);
     }
 
     private void FixedUpdate()
     {
-        Vector3 dir = _targetPos - transform.position;
-        wrestlerRigidbody.AddForce(dir.normalized * RoamingSpeed);
+        wrestlerRigidbody.AddForce(_movementDir.normalized * MovementSpeed);
     }
 
     private void OnCollisionEnter(Collision other)
