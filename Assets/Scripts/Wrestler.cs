@@ -57,7 +57,7 @@ public abstract class Wrestler : MonoBehaviour
     {
         ForceFactor += forcePoint;
     }
-    protected virtual void UpdateWrestlerScore(int point)
+    public virtual void UpdateWrestlerScore(int point)
     {
         Score += point;
     }

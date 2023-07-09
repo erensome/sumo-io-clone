@@ -11,7 +11,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     public PlayerController playerController;
     public List<Wrestler> allWrestlers;
-
+    public float gameArenaRadius;
+    private Timer _timer;
+    
     private void Awake()
     {
         // Implement Singleton
@@ -22,6 +24,7 @@ public class GameManager : MonoBehaviour
         else
         {
             Instance = this;
+            allWrestlers.Add(playerController);
         }
     }
 
@@ -30,6 +33,8 @@ public class GameManager : MonoBehaviour
     {
         // Prevents timescale delay after the restart game.
         Time.timeScale = 1f;
+        _timer = GetComponent<Timer>();
+        _timer.SetTimerOnUI(_timer.gameDuration);
         StartCoroutine(StartGameInSeconds(3));
     }
 
@@ -39,7 +44,7 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public IEnumerator StartGameInSeconds(int second)
+    private IEnumerator StartGameInSeconds(int second)
     {
         while (second >= 0)
         {
@@ -48,10 +53,16 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
         UserInterfaceManager.Instance.countDownText.enabled = false;
+        _timer.enabled = true;
         foreach (var wrestler in allWrestlers)
         {
             wrestler.enabled = true;
         }
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
     
     public void PauseGame()

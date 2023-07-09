@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
@@ -13,11 +14,10 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] Transform powerUpParent;
     [SerializeField] GameObject powerUpPrefab;
     [SerializeField] GameObject enemyPrefab;
-    [SerializeField] float radius;
     [SerializeField] float powerUpSpawnDelay;
     [SerializeField] int powerUpCount;
     [SerializeField] int enemyCount;
-    
+    private float _radius;
     private int _currentPrefabCount;
     
     private void Awake()
@@ -37,8 +37,9 @@ public class SpawnManager : MonoBehaviour
     void Start()
     {
         _currentPrefabCount = powerUpCount;
+        _radius = Random.Range(3f, GameManager.Instance.gameArenaRadius);
         SpawnEnemies(enemyCount);
-        GameManager.Instance.allWrestlers.Add(GameManager.Instance.playerController);
+        GameManager.Instance.allWrestlers = ShuffleWrestlerOrders(GameManager.Instance.allWrestlers);
         SetStartPositionWrestlers(GameManager.Instance.allWrestlers);
         Invoke(nameof(SpawnPowerUpsInCircleShape),3f + powerUpSpawnDelay);
     }
@@ -50,17 +51,25 @@ public class SpawnManager : MonoBehaviour
     }
 
     // Decrease PowerUp count by one and check the
-    // count of all PowerUps in the scene.
+    // number of all PowerUps in the scene.
+    // If the number is zero then spawn more PowerUps
     public void DecreaseAndCheckPowerUps()
     {
         _currentPrefabCount--;
         if (_currentPrefabCount == 0)
         {
-            radius = Random.Range(7f, 15f);
-            powerUpCount = Random.Range(3, 10);
+            _radius = Random.Range(3f, GameManager.Instance.gameArenaRadius);
+            powerUpCount = Random.Range(5, 10);
             _currentPrefabCount = powerUpCount;
             Invoke(nameof(SpawnPowerUpsInCircleShape), powerUpSpawnDelay);
         }
+    }
+    
+    // Shuffles Wrestlers List, it provides randomness in the player's position (and the other wrestlers')
+    private List<Wrestler> ShuffleWrestlerOrders(List<Wrestler> wrestlers)
+    {
+        System.Random random = new System.Random();
+        return wrestlers.OrderBy(x => random.Next()).ToList();
     }
     
     private void SpawnPowerUpsInCircleShape()
@@ -68,7 +77,8 @@ public class SpawnManager : MonoBehaviour
         int angle = 360 / powerUpCount;
         for (int i = 0; i < powerUpCount; i++)
         {
-            Vector3 prefabPos = new Vector3((radius * Mathf.Cos(Mathf.Deg2Rad * (angle * i))), 0.5f, (radius * Mathf.Sin(Mathf.Deg2Rad * (angle * i))));
+            // Wrestlers will be spawned in the circular form
+            Vector3 prefabPos = new Vector3((_radius * Mathf.Cos(Mathf.Deg2Rad * (angle * i))), 0.5f, (_radius * Mathf.Sin(Mathf.Deg2Rad * (angle * i))));
             var powerUp = Instantiate(powerUpPrefab, prefabPos, Quaternion.identity);
             powerUp.transform.parent = powerUpParent.transform;
         }
@@ -90,7 +100,7 @@ public class SpawnManager : MonoBehaviour
         for (int i = 0; i < wrestlers.Count; i++)
         {
             // Wrestlers will be positioned in the circular form
-            Vector3 randomPos = new Vector3((radius * Mathf.Cos(Mathf.Deg2Rad * (angle * i))), 0.5f, (radius * Mathf.Sin(Mathf.Deg2Rad * (angle * i))));
+            Vector3 randomPos = new Vector3((_radius * Mathf.Cos(Mathf.Deg2Rad * (angle * i))), 0.5f, (_radius * Mathf.Sin(Mathf.Deg2Rad * (angle * i))));
             wrestlers[i].transform.position = randomPos;
             // Wrestlers will look origin point in the beginning of the game
             wrestlers[i].transform.rotation = Quaternion.LookRotation(-randomPos, Vector3.up);

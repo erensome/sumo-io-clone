@@ -19,6 +19,12 @@ public class Timer : MonoBehaviour
     {
         
     }
+
+    public void SetTimerOnUI(int remainingTime)
+    {
+        UserInterfaceManager.Instance.timerFill.fillAmount = Mathf.InverseLerp(0, gameDuration, remainingTime);
+        UserInterfaceManager.Instance.remainingTimeText.text = $"{gameDuration / 60:0}:{gameDuration % 60:00}";
+    }
     
     private void BeginTimer(int second)
     {
@@ -30,8 +36,7 @@ public class Timer : MonoBehaviour
     {
         while (_remainingTime >= 0)
         {
-            UserInterfaceManager.Instance.timerFill.fillAmount = Mathf.InverseLerp(0, gameDuration, _remainingTime);
-            UserInterfaceManager.Instance.remainingTimeText.text = $"{_remainingTime / 60:0}:{_remainingTime % 60:00}";
+            SetTimerOnUI(_remainingTime);
             _remainingTime--;
             yield return new WaitForSeconds(1f);
         }

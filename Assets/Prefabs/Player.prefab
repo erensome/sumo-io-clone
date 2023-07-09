@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 6826857225230379281}
   - component: {fileID: 6826857225230379286}
   - component: {fileID: 6826857225230379280}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Weak Point
   m_TagString: Weak Point
   m_Icon: {fileID: 0}
@@ -127,8 +127,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.0000001, y: 2.0000005, z: 1.0000005}
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940699}
+  m_Size: {x: 0.6559624, y: 2.0000005, z: 0.73710406}
+  m_Center: {x: -0.006491214, y: -3.7216447e-16, z: -0.001623004}
 --- !u!1 &6826857225610197351
 GameObject:
   m_ObjectHideFlags: 0
@@ -257,10 +257,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec35cde67926ee244bbbb2247df52eb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initForceFactor: 5
+  initForceFactor: 1
   initMovementSpeed: 5
   initWeakPivotRotationSpeed: 5
-  pushedTime: 1
+  pushedTime: 0.5
   weakPivotTransform: {fileID: 6826857224053994334}
   cameraTargetFollow: {fileID: 0}
   fixedJoystick: {fileID: 0}

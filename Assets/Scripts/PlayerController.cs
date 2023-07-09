@@ -10,7 +10,7 @@ public class PlayerController : Wrestler
     private Vector2 _movementDir;
     [Space(20)]
     [SerializeField] TargetFollow cameraTargetFollow;
-    [SerializeField] FixedJoystick fixedJoystick;
+    [SerializeField] Joystick joystickController;
     public bool IsWin { get; private set; } = true;
     
     #region Wrestler Overrides
@@ -49,7 +49,7 @@ public class PlayerController : Wrestler
         
         if (!IsBeingPushed)
         {
-            _movementDir = new Vector2(fixedJoystick.Horizontal, fixedJoystick.Vertical);
+            _movementDir = new Vector2(joystickController.Horizontal, joystickController.Vertical);
         }
         // If player doesn't move then don't rotate the object to start point.
         if (_movementDir != Vector2.zero) 
