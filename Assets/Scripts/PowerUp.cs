@@ -6,6 +6,6 @@ using UnityEngine.Serialization;
 public class PowerUp : MonoBehaviour
 {
     public int scorePoint;
-    public int forcePoint;
+    public float forcePoint;
     public float scaleMultiplier;
 }

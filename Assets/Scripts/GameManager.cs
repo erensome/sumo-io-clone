@@ -9,7 +9,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     public PlayerController playerController;
-    
+    public List<Wrestler> allWrestlers;
+
     private void Awake()
     {
         // Implement Singleton
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
     {
         // Prevents timescale delay after the restart game.
         Time.timeScale = 1f;
+        allWrestlers.Add(playerController);
     }
 
     // Update is called once per frame
@@ -42,7 +44,6 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 0f;
             UserInterfaceManager.Instance.OnPause();
-            print("paused");
         }
     }
 
@@ -50,7 +51,6 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         UserInterfaceManager.Instance.OnResume();
-        print("resume");
     }
 
     public void RestartGame()
@@ -60,8 +60,15 @@ public class GameManager : MonoBehaviour
     
     public void FinishGame()
     {
-        // First check for is player alive
         UserInterfaceManager.Instance.OnFinish(playerController.IsWin);
         Time.timeScale = 0f;
+    }
+
+    public void CheckEnemyCount()
+    {
+        if (allWrestlers.Count == 1)
+        {
+            FinishGame();
+        }
     }
 }

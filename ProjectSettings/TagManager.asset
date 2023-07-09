@@ -7,14 +7,15 @@ TagManager:
   - Weak Point
   - PowerUp
   - Enemy
+  - Death Zone
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Weak Point
   - Water
   - UI
-  - 
+  - PowerUp
   - 
   - 
   - 
