@@ -45,7 +45,7 @@ public abstract class Wrestler : MonoBehaviour
     }
     // Rotates the Weak Point Pivot object in the Y-axis according to the player's movement direction.
     // Thus, Weak Point object will always stay at back of the player.
-    protected virtual void RotateWeakPivot(Vector3 movementDir)
+    protected virtual void RotateWeakPivot(Vector2 movementDir)
     {
         float angle = Mathf.Atan2(movementDir.x, movementDir.y) * Mathf.Rad2Deg;
         var rotation = weakPivotTransform.rotation;

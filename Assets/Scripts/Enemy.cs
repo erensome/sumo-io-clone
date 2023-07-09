@@ -44,7 +44,9 @@ public class Enemy : Wrestler
     void Update()
     {
         _movementDir = _targetPos - transform.position;
-        RotateWeakPivot(_movementDir);
+        // Convert 3D direction vector to 2D direction vector 
+        Vector2 inputDir = new Vector2(_movementDir.x, _movementDir.z);
+        RotateWeakPivot(inputDir);
     }
 
     private void FixedUpdate()
